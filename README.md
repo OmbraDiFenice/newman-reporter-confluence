@@ -4,7 +4,7 @@ This needs to be used in [conjunction with Newman](https://github.com/postmanlab
 
 > Different from [newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html) is not aggregating results for executions by using the cursor reference which is unique for each execution instead of the item id.
 
-> Please use [newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html) if you want aggregated results. You can use the [templates](https://github.com/martijnvandervlag/newman-reporter-htmlfull/blob/develop/templates/aggregated) which are based on the original templates including the [changes](#changes), see [Templates > Aggregated](#aggregated) here below.
+> Please use [newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html) if you want aggregated results. You can use the [templates](https://github.com/martijnvandervlag/newman-reporter-htmlfull/tree/master/templates/aggregated) which are based on the original templates including the [changes](#changes), see [Templates > Aggregated](#aggregated) here below.
 
 ## Install
 > The installation should be global if newman is installed globally, local otherwise. (Replace -g from the command below with -S for a local installation)
@@ -18,7 +18,7 @@ The examples provided in the usage are for showing the differences between [newm
 
 Iteration (```-n 2```) is used to show the difference between aggregated and full reports.
 
-HTML examples can be found [here](https://github.com/martijnvandervlag/newman-reporter-htmlfull/blob/develop/examples).
+HTML examples can be found [here](https://github.com/martijnvandervlag/newman-reporter-htmlfull/tree/master/examples).
 
 ### Original templates
 > Use [newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html) to execute
@@ -32,7 +32,7 @@ $ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-79
 ```
 
 ### Aggregated templates
-> Use [newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html) to execute with [aggregated](https://github.com/martijnvandervlag/newman-reporter-htmlfull/blob/develop/templates/aggregated) templates.
+> Use [newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html) to execute with [aggregated](https://github.com/martijnvandervlag/newman-reporter-htmlfull/tree/master/templates/aggregated) templates.
 
 In order to enable this reporter, specify `html` in Newman's `-r` or `--reporters` option.
 
@@ -59,10 +59,10 @@ newman run https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943
 | CLI Option  | Description       |
 |-------------|-------------------|
 | `--reporter-htmlfull-export <path>` | Specify a path where the output HTML file will be written to disk. If not specified, the file will be written to `newman/` in the current working directory. |
-| `--reporter-htmlfull-template <path>` | Specify a path to the custom template which will be used to render the HTML report. This option depends on `--reporter htmlfull` and `--reporter-htmlfull-export` being present in the run command. If this option is not specified, the [default template](https://github.com/martijnvandervlag/newman-reporter-htmlfull/blob/develop/templates/full/template-default-colored.hbs) is used |
+| `--reporter-htmlfull-template <path>` | Specify a path to the custom template which will be used to render the HTML report. This option depends on `--reporter htmlfull` and `--reporter-htmlfull-export` being present in the run command. If this option is not specified, the [default template](https://github.com/martijnvandervlag/newman-reporter-htmlfull/tree/master/templates/full/template-default-colored.hbs) is used |
 
 Custom templates (currently handlebars only) can be passed to the HTML reporter via `--reporter-htmlfull-template <path>` with `--reporters htmlfull` and `--reporter-htmlfull-export`.
-The [default template](https://github.com/martijnvandervlag/newman-reporter-htmlfull/blob/develop/templates/full/template-default-colored.hbs) is used in all other cases.
+The [default template](https://github.com/martijnvandervlag/newman-reporter-htmlfull/tree/master/templates/full/template-default-colored.hbs) is used in all other cases.
 
 #### With Newman as a Library
 The CLI functionality is available for programmatic use as well.
@@ -71,14 +71,15 @@ The CLI functionality is available for programmatic use as well.
 const newman = require('newman');
 
 newman.run({
-    collection: require('./examples/sample-collection.json'), // can also provide a URL or path to a local JSON file.
+    collection: require('https://www.getpostman.com/collections/631643-f695cab7-6878-eb55-7943-ad88e1ccfd65-JsLv'), // can also provide a URL or path to a local JSON file.
     reporters: 'htmlfull',
     reporter: {
         htmlfull: {
-            export: './sample-collection-report.html', // If not specified, the file will be written to `newman/` in the current working directory.
-            template: './custom-template.hbs' // optional, this will be picked up relative to the directory that Newman runs in.
+            export: './examples/full/htmlreqres.html', // If not specified, the file will be written to `newman/` in the current working directory.
+            template: './templates/htmlreqres.hbs' // optional, this will be picked up relative to the directory that Newman runs in.
         }
-    }
+    },
+	iterationCount: 2
 }, function (err) {
 	if (err) { throw err; }
     console.log('collection run complete!');
@@ -103,21 +104,21 @@ The improvements and fixes to the templates are inspired somewhat contributed by
 
 The following community related templates are adjusted, improved and included:
 
-* Template [template-default.hbs](https://github.com/postmanlabs/newman-reporter-html/blob/develop/lib/template-default.hbs) from [postmanlabs/newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html)
+* Template [template-default.hbs](https://github.com/postmanlabs/newman-reporter-html/tree/master/lib/template-default.hbs) from [postmanlabs/newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html)
 * Template [template-default-colored.hbs](https://gist.github.com/tegomass/fd67fa22f39a7ebe33a533862ff09d88#file-template-default-colored-hbs) from [tegomass](https://gist.github.com/tegomass)
 * Template [htmlreqres.hbs](https://github.com/MarcosEllys/awesome-newman-html-template/blob/master/templates/htmlreqres.hbs) from [MarcosEllys/awesome-newman-html-template](https://github.com/MarcosEllys/awesome-newman-html-template)
 
 #### Original
 
-The original templates are included [here](https://github.com/martijnvandervlag/newman-reporter-htmlfull/blob/develop/templates/original).
+The original templates are included [here](https://github.com/martijnvandervlag/newman-reporter-htmlfull/tree/master/templates/original).
 
 #### Aggregated
 
-The [changes](#changes) to the original templates, which can be used with [newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html), are included [here](https://github.com/martijnvandervlag/newman-reporter-htmlfull/blob/develop/templates/aggregated).
+The [changes](#changes) to the original templates, which can be used with [newman-reporter-html](https://github.com/postmanlabs/newman-reporter-html), are included [here](https://github.com/martijnvandervlag/newman-reporter-htmlfull/tree/master/templates/aggregated).
 
 #### Full
 
-The templates which can be used with this project including the [changes](#changes) are included [here](https://github.com/martijnvandervlag/newman-reporter-htmlfull/blob/develop/templates/full).
+The templates which can be used with this project including the [changes](#changes) are included [here](https://github.com/martijnvandervlag/newman-reporter-htmlfull/tree/master/templates/full).
 
 ### Possible improvements
 
@@ -152,4 +153,4 @@ Sign in using your Postman account to participate in the discussions and don't f
 
 
 ## License
-This software is licensed under Apache-2.0. Copyright Postdot Technologies, Inc. See the [LICENSE.md](LICENSE.md) file for more information.
+This software is licensed under Apache-2.0. Copyright Postdot Technologies, Inc. See the [LICENSE](LICENSE) file for more information.
