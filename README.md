@@ -76,7 +76,7 @@ newman.run({
     reporter: {
         htmlfull: {
             export: './examples/full/htmlreqres.html', // If not specified, the file will be written to `newman/` in the current working directory.
-            template: './templates/htmlreqres.hbs' // optional, this will be picked up relative to the directory that Newman runs in.
+            template: './templates/full/htmlreqres.hbs' // optional, this will be picked up relative to the directory that Newman runs in.
         }
     },
 	iterationCount: 2
