@@ -9,7 +9,8 @@
       <thead>
         <tr>
             <th>Collection name</th>
-            <th># failures</th>
+            <th>Failures</th>
+            <th>Updated on</th>
         </tr>
       </thead>
       <tbody>
@@ -17,6 +18,7 @@
             {{#with summary}}
                 <td>{{collection.name}}</td>
                 <td>{{failures.length}}</td>
+                <td>{{../timestamp}}</td>
             {{/with}}
         </tr>
       </tbody>
