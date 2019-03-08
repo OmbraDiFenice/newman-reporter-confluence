@@ -8,6 +8,7 @@
     "filesize": "3.6.1",
     "handlebars": "4.0.11",
     "lodash": "4.17.10",
+    "newman": "^4.4.0",
     "pretty-ms": "3.2.0"
   },
   "deprecated": false,
