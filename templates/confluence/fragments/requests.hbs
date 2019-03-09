@@ -1,0 +1,91 @@
+h4. Requests
+
+{{#each aggregations}}
+    {{#if parent.name}}
+        h4. {{parent.name}}
+    {{/if}}
+    {{> aggregations}}
+{{/each}}
+
+{{#*inline "aggregations"}}
+    {{#each executions}}
+        {anchor:{{cursor.ref}} }
+        {{#if cumulativeTests.failed}}
+            {warning:title={{item.name}} }
+                {expand:Details...}
+                    {{> aggregationContent}}
+                {expand}
+            {warning}
+        {{else}}
+            {tip:title={{item.name}} }
+                {expand:Details...}
+                    {{> aggregationContent}}
+                {expand}
+            {tip}
+        {{/if}}
+    {{/each}}
+{{/inline}}
+
+{{#*inline "aggregationContent"}}
+    {{#with request}}
+        {{#if description.content}}
+            {{sectionRow "Description" (escapeWiki description.content)}}
+        {{/if}}
+
+        {{sectionRow "Method" method}}
+        {{sectionRow "URL" (link url url)}}
+    {{/with}}
+
+    {{#if requestError}}
+        {{sectionRow "Error" "There was an error sending this request"}}
+        {{sectionRow "Error code" requestError.code}}
+        {{#if requestError.connect}}
+            {{sectionRow "Details" "A connection to the host could not be established within the stipulated timeout"}}
+        {{/if}}
+    {{/if}}
+
+    {{sectionRow "Time of request" mean.time}}
+    {{sectionRow "Size of request" mean.size}}
+
+    {{sectionRow "Total passed tests" cumulativeTests.passed}}
+    {{sectionRow "Total failed tests" cumulativeTests.failed}}
+
+    {{sectionRow "Status code" response.code}}
+
+    {{#with request}}
+        {{#if body.raw}}
+            {section}
+                {column:width=30%}
+                    Request body
+                {column}
+                {column:width=70%}
+                    {code:language=JavaScript|collapse=true|linenumbers=true}{{{body.raw}}}{code}
+                {column}
+            {section}
+        {{/if}}
+    {{/with}}
+
+    {{#if response.body}}
+        {section}
+            {column:width=30%}Response body{column}
+            {column:width=70%}
+                {code:language=JavaScript|collapse=true|linenumbers=true}{{{response.body}}}{code}
+            {column}
+        {section}
+    {{/if}}
+
+    {{#if assertions.length}}
+        {section}
+            {column:width=30%}Tests{column}
+            {column:width=70%}
+                ||Name||Pass count||Fail count||
+                {{#each assertions}}
+                    |{{name}}|{{> assertionPassed}}|{{> assertionFailed}}|
+                {{/each}}
+            {column}
+        {section}
+    {{/if}}
+{{/inline}}
+
+{{#*inline "assertionPassed"}}{status:colour={{#if passed}}Green{{else}}Grey{{/if}}|title={{passed}}|subtle=false}{{/inline}}
+{{#*inline "assertionFailed"}}{status:colour={{#if failed}}Red{{else}}Grey{{/if}}|title={{failed}}|subtle=false}{{/inline}}
