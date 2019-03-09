@@ -1,29 +1,38 @@
+{{#*inline "highlight"}}{{#if highlight}}*{color:red}{{/if}}{{value}}{{#if highlight}}{color}*{{/if}}{{/inline}}
+
 {{#with summary}}
-h3. {{collection.name}}
+h2. Collection {{collection.name}}
 
 {{#if collection.description}}
-    |Description|{{collection.description}}|
+    {section}
+        {column:width=30%}
+            Description
+        {column}
+        {column:width=70%}
+            {{collection.description}}
+        {column}
+    {section}
 {{/if}}
 
-    |Time|{{../timestamp}}|
-    |Exported with|Newman v{{../version}}|
+    {{sectionRow "Time" ../timestamp }}
+    {{sectionRow "Exported with" (add "Newman v" ../version) }}
 
 {{#with stats}}
 h4. Base Information
 
-    ||||Total||Failed||
-    |Iterations|{{iterations.total}}|{{iterations.failed}}|
-    |Requests|{{requests.total}}|{{requests.failed}}|
-    |Prerequest Scripts|{{prerequestScripts.total}}|{{prerequestScripts.failed}}|
-    |Test Scripts|{{testScripts.total}}|{{testScripts.failed}}|
-    |Assertions|{{assertions.total}}|{{#if assertions.failed}}*{color:red}{{/if}}{{assertions.failed}}{{#if assertions.failed}}*{{/if}}|
+    | ||Total||Failed||
+    |Iterations|{{iterations.total}}|{{>highlight highlight=iterations.failed value=iterations.failed}}|
+    |Requests|{{requests.total}}|{{>highlight highlight=requests.failed value=requests.failed}}|
+    |Prerequest Scripts|{{prerequestScripts.total}}|{{>highlight highlight=prerequestScripts.failed value=prerequestScripts.failed}}|
+    |Test Scripts|{{testScripts.total}}|{{>highlight highlight=testScripts.failed value=testScripts.failed}}|
+    |Assertions|{{assertions.total}}|{{>highlight highlight=assertions.failed value=assertions.failed}}|
 
 {{/with}}
 
-    |Total run duration|{{duration}}|
-    |Total data received|{{responseTotal}}|
-    |Average response time|{{responseAverage}}|
+    {{sectionRow "Total run duration" duration}}
+    {{sectionRow "Total data received" responseTotal}}
+    {{sectionRow "Average response time" responseAverage}}
 
-    |Total Failures|*{{failures.length}}*|
+    {{sectionRow "Total Failures" (add (add "*" failures.length) "*") }}
 
 {{/with}}
