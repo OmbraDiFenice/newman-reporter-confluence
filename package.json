@@ -2,6 +2,9 @@
   "name": "newman-reporter-htmlfull",
   "version": "1.0.0",
   "description": "A Newman HTML Reporter providing full reports (without aggregation of results)",
+  "scripts": {
+    "build-templates": "concat -o templates/confluence/wiki.hbs templates/confluence/fragments/intro.hbs templates/confluence/fragments/failures.hbs"
+  },
   "main": "index.js",
   "bundleDependencies": false,
   "dependencies": {
@@ -36,5 +39,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/martijnvandervlag/newman-reporter-htmlfull.git"
+  },
+  "devDependencies": {
+    "concat": "^1.0.3"
   }
 }
