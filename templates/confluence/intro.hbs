@@ -1,0 +1,29 @@
+{{#with summary}}
+h3. {{collection.name}}
+
+{{#if collection.description}}
+    |Description|{{collection.description}}|
+{{/if}}
+
+    |Time|{{../timestamp}}|
+    |Exported with|Newman v{{../version}}|
+
+{{#with stats}}
+h4. Base Information
+
+    ||||Total||Failed||
+    |Iterations|{{iterations.total}}|{{iterations.failed}}|
+    |Requests|{{requests.total}}|{{requests.failed}}|
+    |Prerequest Scripts|{{prerequestScripts.total}}|{{prerequestScripts.failed}}|
+    |Test Scripts|{{testScripts.total}}|{{testScripts.failed}}|
+    |Assertions|{{assertions.total}}|{{#if assertions.failed}}*{color:red}{{/if}}{{assertions.failed}}{{#if assertions.failed}}*{{/if}}|
+
+{{/with}}
+
+    |Total run duration|{{duration}}|
+    |Total data received|{{responseTotal}}|
+    |Average response time|{{responseAverage}}|
+
+    |Total Failures|*{{failures.length}}*|
+
+{{/with}}
