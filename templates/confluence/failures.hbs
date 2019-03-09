@@ -1,0 +1,20 @@
+{{#with summary}}
+    {{#if failures.length}}
+        h4. Failures
+
+        {{#each failures}}
+            {warning:title={{error.name}}: {{#if error.test}}{{error.test}}{{else}}{{error.message}}{{/if}} }
+                {expand:Details...}
+                    {{#if error.test}}
+                        {{sectionRow "Description" error.message }}
+                    {{/if}}
+                    {{sectionRow "Location" at}}
+                    {{sectionRow "Request" (link (add "#" cursor.ref) (escapeWiki source.name) ) }}
+                    {{#gt cursor.cycles 1}}
+                        {{sectionRow "Iteration" (add cursor.iteration 1)}}
+                    {{/gt}}
+                {expand}
+            {warning}
+        {{/each}}
+    {{/if}}
+{{/with}}
