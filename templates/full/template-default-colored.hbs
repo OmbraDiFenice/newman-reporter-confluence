@@ -3,25 +3,290 @@
 <head>
   <meta charset="UTF-8">
   <title>Collection '{{#with summary}}{{collection.name}}{{/with}}' - Report</title>
+
+    <style>
+        .tego-bg-red .panel-title, .tego-bg-green .panel-title, .tego-fg {
+            color: #fff;
+        }
+        .tego-bg-red {
+            background-color: #e74c3c !important;
+        }
+        .tego-bg-green {
+            background-color: #27ae60 !important;
+        }
+        .tego-color-red {
+            color: #c0392b;
+            font-weight: bold;
+        }
+        .tego-color-green {
+            color: #27ae60;
+            font-weight: bold;
+        }
+    </style>
+	<!--
+		Remarkable for markdown to HTML
+		Source: https://github.com/jonschlinkert/remarkable
+	-->
+	<script src="https://cdn.jsdelivr.net/remarkable/1.7.1/remarkable.min.js"></script>
 </head>
 <body>
-  <table>
-      <thead>
-        <tr>
-            <th>Collection name</th>
-            <th>Failures</th>
-            <th>Updated on</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-            {{#with summary}}
-                <td>{{collection.name}}</td>
-                <td>{{failures.length}}</td>
-                <td>{{../timestamp}}</td>
-            {{/with}}
-        </tr>
-      </tbody>
-  </table>
+  <div class="container">
+    <h3>Collection '{{#with summary}}{{collection.name}}{{/with}}' - Report</h3>
+    <div class="row">
+      {{#with summary}}
+        <div class="col-md-3">Collection</div><div class="col-md-9">{{collection.name}}</div>
+        {{#if collection.description}}<div class="col-md-3">Description</div><div class="col-md-9 markdown">{{collection.description}}</div>{{/if}}
+      {{/with}}
+        <div class="col-md-3">Time</div><div class="col-md-9">{{timestamp}}</div>
+        <div class="col-md-3" style="display:none;">Exported with</div><div style="display:none;" class="col-md-9">Newman v{{version}}</div>
+        <!--RCSINFO-->
+        <h4 class="col-md-12">Base Information</h4>
+        <!--BASEINFO-->
+        <div class="col-md-12">&nbsp;</div>
+        <div class="col-md-4">&nbsp;</div><div class="col-md-4"><strong>Total</strong></div><div class="col-md-4"><strong>Failed</strong></div>
+
+      {{#with summary}}
+        {{#with stats}}
+          <div class="col-md-4">Iterations</div><div class="col-md-4">{{iterations.total}}</div><div class="col-md-4">{{iterations.failed}}</div>
+          <div class="col-md-4">Requests</div><div class="col-md-4">{{requests.total}}</div><div class="col-md-4">{{requests.failed}}</div>
+          <div class="col-md-4">Prerequest Scripts</div><div class="col-md-4">{{prerequestScripts.total}}</div><div class="col-md-4">{{prerequestScripts.failed}}</div>
+          <div class="col-md-4">Test Scripts</div><div class="col-md-4">{{testScripts.total}}</div><div class="col-md-4">{{testScripts.failed}}</div>
+            <div class="col-md-4">Assertions</div><div class="col-md-4">{{assertions.total}}</div><div class="col-md-4{{#if assertions.failed}} tego-color-red{{/if}}">{{assertions.failed}}</div>
+        {{/with}}
+
+        <div class="col-md-12">&nbsp;</div>
+        <div class="col-md-6">Total run duration</div><div class="col-md-6">{{duration}}</div>
+        <div class="col-md-6">Total data received</div><div class="col-md-6">{{responseTotal}} (approx)</div>
+        <div class="col-md-6">Average response time</div><div class="col-md-6">{{responseAverage}}</div>
+
+        <div class="col-md-12">&nbsp;</div>
+        <div class="col-md-3"><strong>Total Failures</strong></div><div class="col-md-6"><strong>{{failures.length}}</strong></div>
+      {{/with}}
+    </div>
+
+	{{#if summary.failures.length}}
+        <br/><h4>Failures</h4>
+
+        {{#each summary.failures}}
+            <div class="panel-group" id="collapse-failure-{{@index}}" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading tego-bg-red" role="tab" id="failureHead-{{@index}}">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#failureData-{{@index}}" aria-controls="collapseOne">
+                                {{error.name}}: {{#if error.test}}{{error.test}}{{else}}{{error.message}}{{/if}}
+                            </a>
+                        </h4>
+                    </div>
+
+                    <div id="failureData-{{@index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="failureHead-{{@index}}">
+                        <div class="panel-body">
+                            <div class="col-md-12">&nbsp;</div>
+                            {{#if error.test}}
+                                <div class="col-md-4">Description</div><div class="col-md-8">{{error.message}}</div><br/>
+                            {{/if}}
+
+                            <div class="col-md-4">Location</div><div class="col-md-8">{{at}}</div><br/>
+                            <div class="col-md-4">Request</div><div class="col-md-8">
+                                <a href="#collapse-request-{{cursor.ref}}">{{source.name}}</a>
+                            </div>
+                            {{#gt cursor.cycles 1}}
+                                <div class="col-md-4">Iteration</div><div class="col-md-8">{{add cursor.iteration 1}}</div><br/>
+                            {{/gt}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    {{/if}}
+
+    <br/><h4>Requests</h4>
+
+    {{#each aggregations}}
+        {{#if parent.name}}
+        <div class="panel-group" id="collapse-folder-{{parent.id}}" role="tablist" aria-multiselectable="true">
+            <div role="tab" id="folderHead-{{parent.id}}">
+                <h4 style="font-size: 18px;" class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#folderData-{{parent.id}}" aria-controls="collapseOne"><strong>{{parent.name}}</strong></a></h4>
+            </div>
+            <br/>
+            <div id="folderData-{{parent.id}}" class="panel-collapse collapsed" role="tabpanel" aria-labelledby="folderHead-{{parent.id}}">
+            {{> aggregations}}
+            </div>
+        </div>
+        {{else}}
+        {{> aggregations}}
+        {{/if}}
+    {{/each}}
+      <!-- Alain Lim : Preparation of implementation of console logging
+          Get info from "().on('console') then parse them here -->
+  </div>
+
+{{#*inline "aggregations"}}
+    {{#each executions}}
+        <div class="panel-group" id="collapse-request-{{cursor.ref}}" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading{{#if cumulativeTests.failed}} tego-bg-red{{else}} tego-bg-green{{/if}}" role="tab" id="requestHead-{{cursor.ref}}">
+                    <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#requestData-{{cursor.ref}}" aria-controls="collapseOne">{{item.name}}</a></h4>
+                </div>
+
+                <div id="requestData-{{cursor.ref}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="requestHead-{{cursor.ref}}">
+                    <div class="panel-body">
+                        {{#with request}}
+                            {{#if description.content}}
+                                <div class="col-md-4">Description</div><div class="col-md-8 markdown">{{description.content}}</div>
+                                <div class="col-md-12">&nbsp;</div>
+                            {{/if}}
+
+                            <div class="col-md-4">Method</div><div class="col-md-8">{{method}}</div>
+                            <div class="col-md-4">URL</div><div class="col-md-8"><a href="{{url}}" target="_blank">{{url}}</a></div>
+                        {{/with}}
+
+                        {{#if requestError}}
+							<div class="col-md-12">&nbsp;</div>
+                            <div class="col-md-4"><b>Error</b></div><div class="col-md-8"><b>There was an error sending this request</b></div>
+                            <div class="col-md-4"><b>Error code</b></div><div class="col-md-8"><b>{{requestError.code}}</b></div>
+                            {{#if requestError.connect}}
+                                <div class="col-md-4"><b>Details</b></div><div class="col-md-8"><b>A connection to the host could not be established within the stipulated timeout</b></div>
+                            {{/if}}
+                        {{/if}}
+
+                        <div class="col-md-12">&nbsp;</div>
+                        <div class="col-md-4">Time of request</div><div class="col-md-8">{{mean.time}}</div><br/>
+                        <div class="col-md-4">Size of request</div><div class="col-md-8">{{mean.size}}</div><br/>
+
+                        <div class="col-md-12">&nbsp;</div>
+                        <br/><div class="col-md-4">Total passed tests</div><div class="total-passed col-md-8">{{cumulativeTests.passed}}</div>
+                        <div class="col-md-4">Total failed tests</div><div class="total-failed col-md-8">{{cumulativeTests.failed}}</div><br/>
+
+                        <div class="col-md-12">&nbsp;</div>
+                        <br/><div class="col-md-4">Status code</div><div class="col-md-8">{{response.code}}</div><br/>
+						{{#with request}}
+							{{#if body.raw}}
+								<div class="col-md-12">&nbsp;</div>
+								<br/><div class="col-md-4">Request body</div><div class="col-md-8" style='word-break:break-all;float:right'><pre class="stringifyPretty">{{body.raw}}</pre></div><br/>
+							{{/if}}
+						{{/with}}
+						{{#if response.body}}
+							<div class="col-md-12">&nbsp;</div>
+							<br/><div class="col-md-4">Response body</div><div class="col-md-8" style='word-break:break-all;float:right'><pre class="stringifyPretty">{{response.body}}</pre></div><br/>
+						{{/if}}
+
+                        {{#if assertions.length}}
+                            <div class="col-md-12">&nbsp;</div>
+                            <div class="col-md-4">Tests</div>
+
+                            <div class="col-md-8">
+                                <table class="table table-responsive table-condensed">
+                                    <thead><tr><th>Name</th><th>Pass count</th><th>Fail count</th></tr></thead>
+                                    <tbody>{{#each assertions}}<tr><td>{{this.name}}</td><td {{#if this.passed}} class="tego-bg-green tego-fg"{{/if}}>{{this.passed}}</td><td {{#if this.failed}} class="tego-bg-red tego-fg"{{/if}}>{{this.failed}}</td></tr>{{/each}}</tbody>
+                                </table>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+{{/inline}}
+
+	<!-- CSS Style for JSON Syntax Highlighting -->
+	<style type="text/css">
+	pre {
+		outline: 1px solid # ccc;
+		padding: 5px;
+		margin: 5px;
+	}
+	.json-string {
+		color: rgb(128, 0, 0);
+	}
+	.json-number {
+		color: rgb(255, 128, 0);
+	}
+	.json-boolean {
+		color: rgb(0, 0, 255);
+	}
+	.json-null {
+		color: rgb(0, 0, 255);
+	}
+	.json-key {
+		color: rgb(128, 0, 0);
+	}
+	</style>
+
+	<!-- JSON Syntax Highlighting -->
+	<script type="text/javascript">
+	function syntaxHighlight(json) {
+		if (typeof json != 'string') {
+			 json = JSON.stringify(json, null, 2);
+		}
+		json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+		return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+			var cls = 'json-number';
+			if (/^"/.test(match)) {
+				if (/:$/.test(match)) {
+					cls = 'json-key';
+				} else {
+					cls = 'json-string';
+				}
+			} else if (/true|false/.test(match)) {
+				cls = 'json-boolean';
+			} else if (/null/.test(match)) {
+				cls = 'json-null';
+			}
+			return '<span class="' + cls + '">' + match + '</span>';
+		});
+	}
+
+	// Verify if text is JSON
+	function isJSON(data)
+	{
+	   var ret = true;
+	   try {
+		  JSON.parse(data);
+	   }catch(e) {
+		  ret = false;
+	   }
+	   return ret;
+	}
+
+	// Stringify each element with class 'stringifyPretty'
+	$(".stringifyPretty").each(function () {
+		var data = $(this).text();
+
+		// Verify whether data is JSON
+		if(isJSON(data))
+		{
+			obj = JSON.parse(data);
+			data = syntaxHighlight(obj);
+		}
+
+		$(this).html(data);
+	});
+	</script>
+
+	<!--
+		Convert Markdown to HTML
+		Documentation: https://en.wikipedia.org/wiki/Markdown
+		Live preview: https://markdownlivepreview.com/
+
+	-->
+	<script type="text/javascript">
+	/*
+	 * Prettify markdown
+	 */
+	const remarkable = new Remarkable();
+
+	function trim(string) {
+		return string ? string.replace(/^ +| +$/gm, "") : string;
+	}
+
+	function renderHtmlFromMarkdown(markdown) {
+		return remarkable.render(trim(markdown));
+	}
+
+	$(".markdown").each(function () {
+		var data = $(this).text();
+		$(this).html(renderHtmlFromMarkdown(data));
+	});
+	</script>
 </body>
 </html>
