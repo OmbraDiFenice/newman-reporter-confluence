@@ -1,6 +1,6 @@
 {{#with summary}}
     {{#if failures.length}}
-        h4. Failures
+        h2. Failures
 
         {{#each failures}}
             {warning:title={{error.name}}: {{#if error.test}}{{error.test}}{{else}}{{error.message}}{{/if}} }

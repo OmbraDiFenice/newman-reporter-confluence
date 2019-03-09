@@ -1,7 +1,6 @@
 {{#*inline "highlight"}}{{#if highlight}}*{color:red}{{/if}}{{value}}{{#if highlight}}{color}*{{/if}}{{/inline}}
 
 {{#with summary}}
-h2. Collection {{collection.name}}
 
 {{#if collection.description}}
     {section}
@@ -9,7 +8,7 @@ h2. Collection {{collection.name}}
             Description
         {column}
         {column:width=70%}
-            {{collection.description}}
+            {{{collection.description}}}
         {column}
     {section}
 {{/if}}
@@ -18,7 +17,7 @@ h2. Collection {{collection.name}}
     {{sectionRow "Exported with" (add "Newman v" ../version) }}
 
 {{#with stats}}
-h4. Base Information
+h2. Base Information
 
     | ||Total||Failed||
     |Iterations|{{iterations.total}}|{{>highlight highlight=iterations.failed value=iterations.failed}}|
