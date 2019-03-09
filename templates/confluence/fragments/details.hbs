@@ -1,0 +1,5 @@
+{{#with summary}}
+    {excerpt:hidden=true|atlassian-macro-output-type=BLOCK}
+        {status:colour={{#if failures.length}}Red{{else}}Green{{/if}}|title={{#if failures.length}}FAILED ({{failures.length}} errors){{else}}PASSED{{/if}}|subtle=false} {{../timestamp}}
+    {excerpt}
+{{/with}}

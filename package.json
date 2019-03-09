@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A Newman HTML Reporter providing full reports (without aggregation of results)",
   "scripts": {
-    "build-templates": "concat -o templates/confluence/wiki.hbs templates/confluence/fragments/intro.hbs templates/confluence/fragments/failures.hbs templates/confluence/fragments/requests.hbs"
+    "build-templates": "concat -o templates/confluence/wiki.hbs templates/confluence/fragments/intro.hbs templates/confluence/fragments/failures.hbs templates/confluence/fragments/requests.hbs templates/confluence/fragments/details.hbs"
   },
   "main": "index.js",
   "bundleDependencies": false,
