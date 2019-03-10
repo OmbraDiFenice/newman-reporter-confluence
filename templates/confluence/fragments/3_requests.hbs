@@ -11,13 +11,13 @@ h2. Requests
     {{#each executions}}
         {anchor:{{cursor.ref}} }
         {{#if cumulativeTests.failed}}
-            {warning:title={{item.name}} }
+            {warning:title={{escapeWiki item.name}} }
                 {expand:Details...}
                     {{> aggregationContent}}
                 {expand}
             {warning}
         {{else}}
-            {tip:title={{item.name}} }
+            {tip:title={{escapeWiki item.name}} }
                 {expand:Details...}
                     {{> aggregationContent}}
                 {expand}

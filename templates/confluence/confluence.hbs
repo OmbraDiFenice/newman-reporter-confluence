@@ -68,13 +68,13 @@ h2. Requests
     {{#each executions}}
         {anchor:{{cursor.ref}} }
         {{#if cumulativeTests.failed}}
-            {warning:title={{item.name}} }
+            {warning:title={{escapeWiki item.name}} }
                 {expand:Details...}
                     {{> aggregationContent}}
                 {expand}
             {warning}
         {{else}}
-            {tip:title={{item.name}} }
+            {tip:title={{escapeWiki item.name}} }
                 {expand:Details...}
                     {{> aggregationContent}}
                 {expand}
@@ -148,6 +148,7 @@ h2. Requests
 
 {{#*inline "assertionPassed"}}{status:colour={{#if passed}}Green{{else}}Grey{{/if}}|title={{passed}}|subtle=false}{{/inline}}
 {{#*inline "assertionFailed"}}{status:colour={{#if failed}}Red{{else}}Grey{{/if}}|title={{failed}}|subtle=false}{{/inline}}
+
 {{#with summary}}
     {excerpt:hidden=true|atlassian-macro-output-type=BLOCK}
         {status:colour={{#if failures.length}}Red{{else}}Green{{/if}}|title={{#if failures.length}}FAILED ({{failures.length}} errors){{else}}PASSED{{/if}}|subtle=false} {{../timestamp}}
