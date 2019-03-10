@@ -1,5 +1,5 @@
-# Newman HTML Full Reporter Changelog
+# Newman Confluence Reporter Changelog
 1.0.0:
-  date: 2018-10-19
+  date: 2019-03-10
   initial release:
-    - 'Initial newman-reporter-html-full release based on newman-reporter-html'
+    - 'Initial newman-reporter-confluence release based on both newman-reporter-html-full and newman-reporter-html'
