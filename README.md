@@ -1,4 +1,6 @@
 # newman-reporter-confluence
+[![Build Status](https://travis-ci.com/OmbraDiFenice/newman-reporter-confluence.svg?branch=master)](https://travis-ci.com/OmbraDiFenice/newman-reporter-confluence)
+
 Confluence reporter for [Newman](https://github.com/postmanlabs/newman) that uploads newman report on a Confluence page.
 This needs to be used in [conjunction with Newman](https://github.com/postmanlabs/newman#external-reporters) so that it can recognize the reporting options.
 
