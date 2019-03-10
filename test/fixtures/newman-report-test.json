@@ -1,9 +1,9 @@
 {
 	"variables": [],
 	"info": {
-		"name": "html-report-test",
+		"name": "confluence-report-test",
 		"_postman_id": "bd90e43e-8e25-d630-9098-420853777b21",
-		"description": "A sanity check for HTML report generation, including a check for failed requests.",
+		"description": "A sanity check for report generation, including a check for failed requests.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
@@ -21,7 +21,7 @@
               "pm.test(\"Status code is 400\", function () {",
               "    pm.response.to.have.status(400);",
               "});",
-							"// deliberate TypeError to test proper HTML report generation",
+							"// deliberate TypeError to test proper report generation",
 							"tests[\"Body contains status\"] = undefined.alpha;",
 							""
 						]
