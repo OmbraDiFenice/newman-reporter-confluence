@@ -18,8 +18,5 @@ before_install:
   - cd $TRAVIS_REPO_SLUG
   - npm install newman
 
-install:
-  - npm ci
-
 cache:
   - npm
