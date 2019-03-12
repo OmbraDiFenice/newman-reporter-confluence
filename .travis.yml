@@ -18,5 +18,5 @@ before_install:
   - cd $TRAVIS_REPO_SLUG
 
 install:
-  - npm install newman@4.4.0
+  - npm install --save-exact newman@4.4.0
   - npm install
