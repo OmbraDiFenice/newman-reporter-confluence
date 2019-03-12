@@ -17,6 +17,3 @@ before_install:
   - git clone --depth=50 _old $TRAVIS_REPO_SLUG
   - cd $TRAVIS_REPO_SLUG
   - npm install newman
-
-cache:
-  - npm
