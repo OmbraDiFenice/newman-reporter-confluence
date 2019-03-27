@@ -1,11 +1,31 @@
-const fs = require('fs');
+const fs = require('fs'),
+    http = require('http');
 
 describe('Newman CLI', function () {
+    let callCounter, server;
     const outFile = 'out/newman-report.wiki',
-        newman = 'node ./.temp/node_modules/newman/bin/newman.js';
+        newman = 'node ./.temp/node_modules/newman/bin/newman.js',
+        hostname = '0.0.0.0',
+        port = 8081;
+
+    before(function (done) {
+        server = http.createServer((req, res) => {
+            callCounter++;
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('Hello World\n');
+        });
+
+        server.listen(port, hostname, done);
+    });
+
+    after(function () {
+        server.close();
+    });
 
     beforeEach(function (done) {
         fs.stat('out', function (err) {
+            callCounter = 0;
             if (err) {
                 return fs.mkdir('out', done);
             }
@@ -58,5 +78,20 @@ describe('Newman CLI', function () {
                 expect(code, 'should have exit code of 1').to.equal(1);
                 fs.stat(outFile, done);
             });
+    });
+
+    it('should call the server for report upload', function (done) {
+        // eslint-disable-next-line max-len
+        exec(`${newman} run test/fixtures/single-get-request.json -r confluence --reporter-confluence-export ${outFile}
+            --reporter-confluence-username test
+            --reporter-confluence-password test
+            --reporter-confluence-baseUrl localhost:${port}
+            --reporter-confluence-spaceId 1
+            --reporter-confluence-parentId 1`,
+        function (code) {
+            expect(code, 'should have exit code of 0').to.equal(0);
+            expect(callCounter).to.equal(1);
+            done();
+        });
     });
 });

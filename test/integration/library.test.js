@@ -1,10 +1,30 @@
-var fs = require('fs');
+const fs = require('fs'),
+    http = require('http');
 
 describe('Newman Library', function () {
-    var outFile = 'out/newman-report.wiki';
+    let callCounter, server;
+    const outFile = 'out/newman-report.wiki',
+        hostname = '0.0.0.0',
+        port = 8081;
+
+    before(function (done) {
+        server = http.createServer((req, res) => {
+            callCounter++;
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('Hello World\n');
+        });
+
+        server.listen(port, hostname, done);
+    });
+
+    after(function () {
+        server.close();
+    });
 
     beforeEach(function (done) {
         fs.stat('out', function (err) {
+            callCounter = 0;
             if (err) {
                 return fs.mkdir('out', done);
             }
@@ -68,6 +88,18 @@ describe('Newman Library', function () {
             expect(err).to.be.null;
             expect(summary.run.failures, 'should have 1 failure').to.have.lengthOf(1);
             fs.stat(outFile, done);
+        });
+    });
+
+    it('should call the server for report upload', function (done) {
+        newman.run({
+            collection: 'test/fixtures/single-get-request.json',
+            reporters: ['confluence'],
+            reporter: { confluence: { export: outFile, username: 'test', password: 'test', baseUrl: `http://localhost:${port}`, spaceId: 1, parentId: 1 } }
+        }, function (err) {
+            expect(err).to.be.null;
+            expect(callCounter).to.equal(1);
+            done();
         });
     });
 });
